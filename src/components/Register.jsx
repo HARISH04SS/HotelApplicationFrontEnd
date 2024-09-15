@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectEmail, selectName, selectPassword, selectPhonenumber, setEmail, setName, setPassword, setPhonenumber } from "../features/Residents/registerSlice";
+import authServices from "../services/authServices";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const name = useSelector(selectName);
@@ -7,9 +9,30 @@ const Register = () => {
     const phonenumber = useSelector(selectPhonenumber);
     const password = useSelector(selectPassword);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleRegister = (e)=>{
         e.preventDefault();
-        console.log(name,email,phonenumber,password);
+        //console.log(name,email,phonenumber,password);
+        const userData = { name, email, phoneNumber:phonenumber, password };
+        authServices.register(userData)
+        .then(response => {
+            console.log('Registration successful:', response);
+            if (response.data && response.data.message) {
+                alert(response.data.message);
+                dispatch(setName(''));
+                dispatch(setEmail(''));
+                dispatch(setPhonenumber(''));
+                dispatch(setPassword(''));
+                navigate('/login');
+            } else {
+                alert('Unexpected response format');
+            }
+        })
+        .catch(error => {
+            console.error('Registration error:', error);
+            const errorMessage = error.response?.data?.message || 'An error occurred';
+            alert(errorMessage);
+        });
     }
     return (
       <div className="container mt-5">
