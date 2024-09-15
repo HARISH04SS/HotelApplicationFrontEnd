@@ -5,6 +5,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Home from './pages/Home';
 import UserDashboardNav from './wrappers/UserDashboardNav';
+import Logout from './components/Logout';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path:"dashboard",
     element:<UserDashboardNav />
+  },
+  {
+    path:"logout",
+    element:<Logout />
   }
 ]);
 const App = () => {
