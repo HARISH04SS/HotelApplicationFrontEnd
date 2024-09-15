@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const HomeNav = () => {
   return (
@@ -27,6 +27,7 @@ const HomeNav = () => {
           </div>
         </div>
       </nav>
+      <Outlet/>
     </div>
   );
 };
