@@ -23,9 +23,7 @@ const AdminNav = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/admin/login">Admin Login</Link> {/* Admin Login Link */}
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/admin/dashboard">Admin Dashboard</Link> {/* Admin Dashboard Link */}
-              </li>
+              
               <li className="nav-item">
                 <Link className="nav-link" to="/logout">Logout</Link> {/* Logout */}
               </li>

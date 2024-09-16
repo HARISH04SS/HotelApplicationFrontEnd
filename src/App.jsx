@@ -9,6 +9,7 @@ import Logout from './components/Logout';
 import AdminRegister from './components/Admin/AdminRegister';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminNav from './wrappers/AdminNav';
+import AdminDashboard from './wrappers/AdminDashboard';
 
 const router = createBrowserRouter([
   {
@@ -38,16 +39,20 @@ const router = createBrowserRouter([
     element:<Logout />
   },
   {
-    path: "admin", // Base path for all admin routes
-    element: <AdminNav />, // Admin navigation or layout wrapper
+    path: "admin",
+    element: <AdminNav />,
     children: [
       {
         path: "login",
-        element: <AdminLogin /> // Admin login route
+        element: <AdminLogin />
       },
       {
         path: "register",
-        element: <AdminRegister /> // Admin registration route
+        element: <AdminRegister />
+      },
+      {
+        path:"adminDashboard",
+        element:<AdminDashboard />
       }
     ]
   }

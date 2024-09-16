@@ -16,7 +16,7 @@ const AdminLogin = () => {
         adminServices.adminLogin(userData)
             .then(response => {
                 localStorage.setItem('token', response.data.token);
-                navigate('/admin/dashboard');
+                navigate('/admin/AdminDashboard');
             })
             .catch(error => {
                 console.error('Login failed:', error);
