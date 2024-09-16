@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import adminServices from '../services/adminServices';
-
 const AdminDashboard = () => {
     const [roomNumber, setRoomNumber] = useState('');
     const [pricePerNight, setPricePerNight] = useState('');
@@ -11,7 +10,13 @@ const AdminDashboard = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [availableRooms, setAvailableRooms] = useState([]);
+    //const [requests, setRequests] = useState([]);
     const navigate = useNavigate();
+    // useEffect(() => {
+    //     getRequests(); 
+    // }, []);
+    
+    
 
     const handleLogout = async () => {
         try {
@@ -23,10 +28,9 @@ const AdminDashboard = () => {
         }
     };
 
-    
     const createRoom = async (e) => {
         e.preventDefault();
-        setLoading(true); 
+        setLoading(true);
 
         try {
             const response = await adminServices.createRoom({ roomNumber, pricePerNight });
@@ -40,108 +44,121 @@ const AdminDashboard = () => {
             }
         } catch (error) {
             console.error('Error creating room:', error);
-            setError('An error occurred while creating the room. Please try again.'); 
-            alert(error.message || 'An unexpected error occurred.'); 
+            setError('An error occurred while creating the room. Please try again.');
+            alert(error.message || 'An unexpected error occurred.');
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     };
-    
-    
+
     const deleteRoom = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.delete(`http://localhost:3001/api/v1/admin/delete-room/${roomId}`);
             console.log(response.data.msg);
-            alert("Room deleted succesfully");
+            alert("Room deleted successfully");
             setRoomId('');
         } catch (error) {
             console.error('Error deleting room:', error);
+            alert('Failed to delete room. Please try again.');
         }
     };
 
+    const allocateRoom = async (e) => {
+        e.preventDefault();
 
-
-//     const allocateRoom = async () => {
-//     if (!residentId || !roomId) {
-//         alert('Please provide both Resident ID and Room ID.');
-//         return;
-//     }
-//     try {
-//         console.log('Starting room allocation...');
-//         const roomData = {
-//             residentId,
-//             roomId,
-//         };
-//         // Call the allocateRoom function from adminServices
-//         const response = await adminServices.allocateRoom(roomData);
-//         console.log('API response:', response.data);
-//         alert('Room allocated successfully!');
-//     } catch (error) {
-//         console.error('Error allocating room:', error);
-//         alert('Error allocating room: ' + (error.response?.data?.msg || error.message));
-//     }
-// };
-const allocateRoom = async () => {
-    console.log('allocateRoom function called'); // Debugging step
-
-    if (!residentId || !roomId) {
-        alert('Please provide both Resident ID and Room ID.');
-        return;
-    }
-
-    try {
-        // Prepare room data
-        const roomData = { residentId, roomId };
-
-        // Call the allocateRoom function from adminServices
-        const response = await adminServices.allocateRoom(roomData);
-
-        // Debugging step: log the full response object
-        console.log('Room allocation response:', response);
-
-        if (response && response.data) {
-            console.log('Room allocated:', response.data);
-            alert('Room allocated successfully!');
+        if (!residentId || !roomId) {
+            alert('Please provide both Resident ID and Room ID.');
+            return;
         }
-    } catch (error) {
-        console.error('Error allocating room:', error);
-        alert('Error allocating room: ' + (error.response?.data?.msg || error.message));
-    }
-};
-        
 
-    // Handle Room Deallocation
+        try {
+            const roomData = { residentId, roomId };
+            const response = await adminServices.allocateRoom(roomData);
+            console.log('Room allocation response:', response);
+            alert('Room allocated successfully!');
+        } catch (error) {
+            console.error('Error allocating room:', error);
+            alert('Error allocating room: ' + (error.response?.data?.msg || error.message));
+        }
+    };
+
     const deallocateRoom = async (e) => {
         e.preventDefault();
         try {
             const deallocationData = { residentId, roomId };
             const response = await axios.post('http://localhost:3001/api/v1/admin/deallocate-room', deallocationData);
             console.log(response.data.msg);
-            alert("Deallocated Succesfully");
+            alert("Room deallocated successfully");
             setResidentId('');
             setRoomId('');
         } catch (error) {
             console.error('Error deallocating room:', error);
+            alert('Error deallocating room: ' + (error.response?.data?.msg || error.message));
         }
     };
 
-    // Fetch Available Rooms
     const getAvailableRooms = async () => {
         try {
             const response = await axios.get('http://localhost:3001/api/v1/admin/available-rooms');
             setAvailableRooms(response.data.availableRooms);
         } catch (error) {
             console.error('Error fetching available rooms:', error);
+            alert('Failed to fetch available rooms.');
         }
     };
+
+    // const getRequests = async () => {
+    //     try {
+    //         const response = await adminServices.getRequests();
+    //         console.log('Requests response:', response);
+    //         setRequests(response.data.requests || []);
+    //     } catch (error) {
+    //         console.error('Error fetching requests:', error);
+    //         alert('Failed to fetch requests.');
+    //     }
+    // };
+    // const getRequests = async () => {
+    //     try {
+    //         const response = await axios.get('http://localhost:3001/api/v1/fetch');
+    //         console.log(response.data); // Check the structure of the response
+    //         setRequests(response.data.requests); // Ensure it's 'requests' if that's the correct case
+    //     } catch (error) {
+    //         console.error('Error fetching requests:', error);
+    //         alert('Failed to fetch requests.');
+    //     }
+    // };
+    const [requests, setRequests] = useState([]);  // Initialize requests as an empty array
+
+    const getRequests = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/api/v1/fetch');
+            console.log('API response:', response.data);  // Log the full response for debugging
+            // Check if the data contains requests; update the state accordingly
+            if (response.data) {
+                setRequests(response.data);
+                console.log("if")
+            } else {
+                setRequests([]);
+                  // If no requests field is found, set an empty array
+                  console.log("else")
+            }
+        } catch (error) {
+            console.error('Error fetching requests:', error);
+            alert('Failed to fetch requests.');
+            setRequests([]);  // In case of error, ensure requests is set to an empty array
+        }
+    };
+    
+    useEffect(() => {
+        getRequests(); // Fetch requests when the component mounts
+    }, []);
 
     return (
         <div className="container mt-5">
             <h1>Admin Dashboard</h1>
             <button className="btn btn-danger mb-3" onClick={handleLogout}>Logout</button>
 
-            {/* Create Room */}
             <h2>Create Room</h2>
             <form onSubmit={createRoom}>
                 <div className="mb-3">
@@ -169,7 +186,6 @@ const allocateRoom = async () => {
                 <button type="submit" className="btn btn-primary">Create Room</button>
             </form>
 
-            {/* Delete Room */}
             <h2 className="mt-5">Delete Room</h2>
             <form onSubmit={deleteRoom}>
                 <div className="mb-3">
@@ -184,7 +200,6 @@ const allocateRoom = async () => {
                 <button type="submit" className="btn btn-danger">Delete Room</button>
             </form>
 
-            {/* Allocate Room */}
             <h2 className="mt-5">Allocate Room</h2>
             <form onSubmit={allocateRoom}>
                 <div className="mb-3">
@@ -208,7 +223,6 @@ const allocateRoom = async () => {
                 <button type="submit" className="btn btn-success">Allocate Room</button>
             </form>
 
-            {/* Deallocate Room */}
             <h2 className="mt-5">Deallocate Room</h2>
             <form onSubmit={deallocateRoom}>
                 <div className="mb-3">
@@ -232,7 +246,6 @@ const allocateRoom = async () => {
                 <button type="submit" className="btn btn-warning">Deallocate Room</button>
             </form>
 
-            {/* Get Available Rooms */}
             <h2 className="mt-5">Available Rooms</h2>
             <button className="btn btn-info mb-3" onClick={getAvailableRooms}>Get Available Rooms</button>
             <ul className="list-group">
@@ -246,6 +259,24 @@ const allocateRoom = async () => {
                     <li className="list-group-item">No rooms available</li>
                 )}
             </ul>
+            <h2 className="mt-5">Resident Requests</h2>
+<button className="btn btn-info mb-3" onClick={getRequests}>Get Requests</button>
+<ul className="list-group">
+    {requests.length > 0 ? (
+        requests.map(request => (
+            <li key={request._id} className="list-group-item">
+                <p><strong>Request ID:</strong> {request._id}</p>
+                <p><strong>Resident Name:</strong> {request.resident?.name || 'N/A'}</p>
+                <p><strong>Resident Email:</strong> {request.resident?.email || 'N/A'}</p>
+                <p><strong>Description:</strong> {request.description}</p>
+                <p><strong>Assigned Staff:</strong> {request.assignedStaff?.name || 'Unassigned'}</p>
+                <p><strong>Status:</strong> {request.status}</p>
+            </li>
+        ))
+    ) : (
+        <li className="list-group-item">No requests found</li>
+    )}
+</ul>
         </div>
     );
 };

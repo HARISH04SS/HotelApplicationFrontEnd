@@ -35,7 +35,12 @@ const adminServices = {
                 console.error('API request failed:', error);
                 throw error; // Ensure errors are thrown to be caught in the caller
             }
-        }
+        },
+
+        // getRequests : async() => {
+        //     return await instance.get('/fetch');
+        // }
+        
 };
 
 export default adminServices;
