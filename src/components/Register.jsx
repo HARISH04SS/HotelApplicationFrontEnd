@@ -12,7 +12,6 @@ const Register = () => {
     const navigate = useNavigate();
     const handleRegister = (e)=>{
         e.preventDefault();
-        //console.log(name,email,phonenumber,password);
         const userData = { name, email, phoneNumber:phonenumber, password };
         authServices.register(userData)
         .then(response => {

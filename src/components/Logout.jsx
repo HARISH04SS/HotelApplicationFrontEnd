@@ -9,10 +9,9 @@ const Logout = () => {
         const performLogout = async () => {
             try {
                 const response = await authServices.logout();
-                alert(response.data.message); // Adjust based on your response structure
+                alert(response.data.message); 
                 navigate('/login');
             } catch (error) {
-                // Handle different types of errors
                 const errorMessage = error.response?.data?.message || 'An error occurred during logout';
                 alert(errorMessage);
             }

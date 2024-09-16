@@ -1,25 +1,29 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectEmail, selectPassword, setEmail, setPassword } from '../features/Residents/loginSlice';
 import { useNavigate } from 'react-router-dom';
-import authServices from '../services/authServices';
+import adminServices from '../../services/adminServices';
+import { selectPassword, selectUsername, setPassword, setUsername } from '../../features/Admin/adminregisterSlice';
 
-const Login = () => {
-    const email = useSelector(selectEmail);
+
+const AdminRegister = () => {
+    const username = useSelector(selectUsername);
     const password = useSelector(selectPassword);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleLogin = (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        const userData = { email, password };
-
-        authServices.login(userData)
+        const userData = { username, password };
+    
+        console.log(userData); 
+    
+        adminServices.adminRegister(userData)
             .then(response => {
-                localStorage.setItem('token', response.data.token); 
-                navigate('/dashboard');
+                console.log('Registration successful:', response.data.message);
+                alert(response.data.message);
+                navigate('/admin/login'); 
             })
             .catch(error => {
-                console.error('Login failed:', error);
+                console.error('Registration failed:', error);
             });
     };
 
@@ -29,18 +33,18 @@ const Login = () => {
                 <div className="col-md-6 col-lg-4">
                     <div className="card">
                         <div className="card-header">
-                            <h2>Login</h2>
+                            <h2>Admin Register</h2>
                         </div>
                         <div className="card-body">
-                            <form onSubmit={handleLogin}>
+                            <form onSubmit={handleRegister}>
                                 <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email</label>
+                                    <label htmlFor="username" className="form-label">Username</label>
                                     <input
-                                        type="email"
+                                        type="text"
                                         className="form-control"
-                                        id="email"
-                                        value={email}
-                                        onChange={(e) => dispatch(setEmail(e.target.value))}
+                                        id="username"
+                                        value={username}
+                                        onChange={(e) => dispatch(setUsername(e.target.value))}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -53,7 +57,7 @@ const Login = () => {
                                         onChange={(e) => dispatch(setPassword(e.target.value))}
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Login</button>
+                                <button type="submit" className="btn btn-primary">Register</button>
                             </form>
                         </div>
                     </div>
@@ -63,4 +67,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AdminRegister;

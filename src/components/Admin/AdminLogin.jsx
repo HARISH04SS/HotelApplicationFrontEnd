@@ -1,22 +1,22 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectEmail, selectPassword, setEmail, setPassword } from '../features/Residents/loginSlice';
+import adminServices from '../../services/adminServices';
 import { useNavigate } from 'react-router-dom';
-import authServices from '../services/authServices';
+import { selectPassword, selectUsername, setPassword, setUsername } from '../../features/Admin/adminloginSlice';
 
-const Login = () => {
-    const email = useSelector(selectEmail);
+const AdminLogin = () => {
+    const username = useSelector(selectUsername);
     const password = useSelector(selectPassword);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        const userData = { email, password };
+        const userData = { username, password };
 
-        authServices.login(userData)
+        adminServices.adminLogin(userData)
             .then(response => {
-                localStorage.setItem('token', response.data.token); 
-                navigate('/dashboard');
+                localStorage.setItem('token', response.data.token);
+                navigate('/admin/dashboard');
             })
             .catch(error => {
                 console.error('Login failed:', error);
@@ -29,18 +29,18 @@ const Login = () => {
                 <div className="col-md-6 col-lg-4">
                     <div className="card">
                         <div className="card-header">
-                            <h2>Login</h2>
+                            <h2>Admin Login</h2>
                         </div>
                         <div className="card-body">
                             <form onSubmit={handleLogin}>
                                 <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email</label>
+                                    <label htmlFor="username" className="form-label">Username</label>
                                     <input
-                                        type="email"
+                                        type="text"
                                         className="form-control"
-                                        id="email"
-                                        value={email}
-                                        onChange={(e) => dispatch(setEmail(e.target.value))}
+                                        id="username"
+                                        value={username}
+                                        onChange={(e) => dispatch(setUsername(e.target.value))}
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -63,4 +63,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AdminLogin;
