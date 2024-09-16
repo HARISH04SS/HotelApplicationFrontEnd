@@ -24,7 +24,18 @@ const adminServices = {
             throw error;
         }
     }
-}
+},
+        deallocateRoom :async (deallocationData) => {
+            console.log('Sending deallocation request with data:', deallocationData);
+            try {
+                const response = await instance.post('/admin/deallocate-room', deallocationData);
+                console.log('Received response:', response);
+                return response;
+            } catch (error) {
+                console.error('API request failed:', error);
+                throw error; // Ensure errors are thrown to be caught in the caller
+            }
+        }
 };
 
 export default adminServices;

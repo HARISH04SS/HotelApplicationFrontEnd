@@ -116,8 +116,11 @@ const allocateRoom = async () => {
         e.preventDefault();
         try {
             const deallocationData = { residentId, roomId };
-            const response = await axios.post('http://localhost:3001/api/v1/admin/deallocateroom', deallocationData);
+            const response = await axios.post('http://localhost:3001/api/v1/admin/deallocate-room', deallocationData);
             console.log(response.data.msg);
+            alert("Deallocated Succesfully");
+            setResidentId('');
+            setRoomId('');
         } catch (error) {
             console.error('Error deallocating room:', error);
         }
