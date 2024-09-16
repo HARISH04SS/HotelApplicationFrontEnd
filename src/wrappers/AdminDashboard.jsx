@@ -13,69 +13,26 @@ const AdminDashboard = () => {
     const [availableRooms, setAvailableRooms] = useState([]);
     const navigate = useNavigate();
 
-    // Handle Admin Logout
     const handleLogout = async () => {
         try {
             const response = await axios.post('http://localhost:3001/api/v1/admin/logout');
             console.log(response.data.message);
-            navigate('/admin/login'); // Redirect to login page after logout
+            navigate('/admin/login');
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
 
-    // Handle Room Creation
-    // const createRoom = async (roomData) => {
-    //     try {
-    //         const response = await axios.post('http://localhost:3001/api/v1/admin/create-room', roomData);
-    //         console.log('Room created successfully:', response.data);
-    //     } catch (error) {
-    //         console.error('Error creating room:', error);
-    //     }
-    // };
-    // const createRoom = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const response = await axios.post('http://localhost:3001/api/v1/admin/create-room', {
-    //             roomNumber,
-    //             pricePerNight
-    //         });
-    //         console.log('Room created successfully:', response.data);
-    //         // Optionally clear form or provide feedback
-
-    //     } catch (error) {
-    //         console.error('Error creating room:', error);
-    //     }
-    // };
-    // const createRoom = async (e) => {
-    //     e.preventDefault();
-
-    //     try {
-    //         const response = await adminServices.createRoom({ roomNumber, pricePerNight });
-
-    //         if (response.data.msg === 'Room created successfully') {
-    //             alert('Room created successfully');
-    //             // Reset the form fields
-    //             setRoomNumber('');
-    //             setPricePerNight('');
-    //         } else if (response.data.msg === 'Room already exists with this number') {
-    //             alert('Room already exists with this number');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error creating room:', error);
-    //         alert('An error occurred while creating the room. Please try again.');
-    //     }
-    // };
+    
     const createRoom = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start loading
+        setLoading(true); 
 
         try {
             const response = await adminServices.createRoom({ roomNumber, pricePerNight });
 
             if (response.data.msg === 'Room created successfully') {
                 alert('Room created successfully');
-                // Reset the form fields
                 setRoomNumber('');
                 setPricePerNight('');
             } else if (response.data.msg === 'Room already exists with this number') {
@@ -83,10 +40,10 @@ const AdminDashboard = () => {
             }
         } catch (error) {
             console.error('Error creating room:', error);
-            setError('An error occurred while creating the room. Please try again.'); // Set error message
-            alert(error.message || 'An unexpected error occurred.'); // Display error message
+            setError('An error occurred while creating the room. Please try again.'); 
+            alert(error.message || 'An unexpected error occurred.'); 
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false); 
         }
     };
     
@@ -96,8 +53,10 @@ const AdminDashboard = () => {
     const deleteRoom = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.delete(`http://localhost:3001/api/v1/admin/deleteroom/${roomId}`);
+            const response = await axios.delete(`http://localhost:3001/api/v1/admin/delete-room/${roomId}`);
             console.log(response.data.msg);
+            alert("Room deleted succesfully");
+            setRoomId('');
         } catch (error) {
             console.error('Error deleting room:', error);
         }
