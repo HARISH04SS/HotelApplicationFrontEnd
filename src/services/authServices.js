@@ -10,6 +10,9 @@ const authServices = {
     logout: async()=>{
         return await instance.post('/auth/logout')
     },
+    submitRequest: async(data) => {
+        return await instance.post('/request', data);
+    },
 }
 
 export default authServices;
