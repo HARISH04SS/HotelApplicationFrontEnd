@@ -48,8 +48,6 @@ const AdminDashboard = () => {
     };
     
     
-
-    // Handle Room Deletion
     const deleteRoom = async (e) => {
         e.preventDefault();
         try {
@@ -62,17 +60,56 @@ const AdminDashboard = () => {
         }
     };
 
-    // Handle Room Allocation
-    const allocateRoom = async (e) => {
-        e.preventDefault();
-        try {
-            const allocationData = { residentId, roomId };
-            const response = await axios.post('http://localhost:3001/api/v1/admin/allocateroom', allocationData);
-            console.log(response.data.msg);
-        } catch (error) {
-            console.error('Error allocating room:', error);
+
+
+//     const allocateRoom = async () => {
+//     if (!residentId || !roomId) {
+//         alert('Please provide both Resident ID and Room ID.');
+//         return;
+//     }
+//     try {
+//         console.log('Starting room allocation...');
+//         const roomData = {
+//             residentId,
+//             roomId,
+//         };
+//         // Call the allocateRoom function from adminServices
+//         const response = await adminServices.allocateRoom(roomData);
+//         console.log('API response:', response.data);
+//         alert('Room allocated successfully!');
+//     } catch (error) {
+//         console.error('Error allocating room:', error);
+//         alert('Error allocating room: ' + (error.response?.data?.msg || error.message));
+//     }
+// };
+const allocateRoom = async () => {
+    console.log('allocateRoom function called'); // Debugging step
+
+    if (!residentId || !roomId) {
+        alert('Please provide both Resident ID and Room ID.');
+        return;
+    }
+
+    try {
+        // Prepare room data
+        const roomData = { residentId, roomId };
+
+        // Call the allocateRoom function from adminServices
+        const response = await adminServices.allocateRoom(roomData);
+
+        // Debugging step: log the full response object
+        console.log('Room allocation response:', response);
+
+        if (response && response.data) {
+            console.log('Room allocated:', response.data);
+            alert('Room allocated successfully!');
         }
-    };
+    } catch (error) {
+        console.error('Error allocating room:', error);
+        alert('Error allocating room: ' + (error.response?.data?.msg || error.message));
+    }
+};
+        
 
     // Handle Room Deallocation
     const deallocateRoom = async (e) => {
