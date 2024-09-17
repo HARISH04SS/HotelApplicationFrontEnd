@@ -10,6 +10,10 @@ import AdminRegister from './components/Admin/AdminRegister';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminNav from './wrappers/AdminNav';
 import AdminDashboard from './wrappers/AdminDashboard';
+import StaffNav from './wrappers/StaffNav';
+import StaffLogin from './components/Staff/StaffLogin';
+import StaffRegister from './components/Staff/StaffRegister'
+import StaffDashboard from './wrappers/StaffDashboard';
 
 const router = createBrowserRouter([
   {
@@ -53,6 +57,24 @@ const router = createBrowserRouter([
       {
         path:"adminDashboard",
         element:<AdminDashboard />
+      }
+    ]
+  },
+  {
+    path: "staff",
+    element: <StaffNav />,
+    children: [
+      {
+        path: "login",
+        element: <StaffLogin />
+      },
+      {
+        path: "register",
+        element: <StaffRegister />
+      },
+      {
+        path:"staffDashboard",
+        element:<StaffDashboard />
       }
     ]
   }

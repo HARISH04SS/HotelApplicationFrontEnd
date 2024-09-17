@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import authServices from '../services/authServices'; // Ensure this service exists and is set up
+import {jwtDecode} from 'jwt-decode';
+import authServices from '../services/authServices'; // Ensure this service exists and is set up properly
 
 const UserDashboardNav = () => {
     const [residentId, setResidentId] = useState(null);
@@ -9,15 +9,24 @@ const UserDashboardNav = () => {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
+        // Retrieve the token from localStorage
         const token = localStorage.getItem('token');
+        console.log('Token retrieved from localStorage:', token); // Log token for debugging
+
         if (token) {
             try {
-                const decodedToken = jwtDecode(token);
-                setResidentId(decodedToken.residentId); // Make sure residentId is in the token
+                const decodedToken = jwtDecode(token); // Decode the token
+                console.log('Decoded Token:', decodedToken); // Log decoded token for debugging
+
+                // Ensure the token contains the expected fields
+                setResidentId(decodedToken.id || decodedToken.residentId); // Update residentId based on token payload
             } catch (error) {
-                console.error('Error decoding token:', error);
-                setResidentId(null);
+                console.error('Error decoding token:', error); // Log decoding error
+                setResidentId(null); // Reset residentId if decoding fails
             }
+        } else {
+            console.warn('No token found in localStorage. Make sure it is being set during login.');
+            setResidentId(null);
         }
     }, []);
 
